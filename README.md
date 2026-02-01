@@ -1,22 +1,33 @@
 # AI Engineer Code Mentor
 
-> ML 기초 지식이 있는 개발자를 위한 AI 코드 멘토 스킬
+> AI/ML 기초 지식이 있는 개발자를 위한 코드 멘토 스킬 | **Computer Vision 엔지니어 특화**
 
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blue)](https://claude.ai/claude-code)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Computer Vision](https://img.shields.io/badge/Focus-Computer%20Vision-orange)](https://github.com/black940514/aiengineer-code-mentor)
 
 ## 소개
 
-AI가 생성한 ML 코드를 **진짜 이해하고 싶은** 개발자를 위한 스킬입니다.
+AI가 생성한 코드를 **진짜 이해하고 싶은** AI 엔지니어를 위한 스킬입니다.
 
 단순히 "이 코드는 데이터를 정규화합니다"가 아닌, **"왜 정규화하는지, 왜 이 숫자인지, 안 하면 어떻게 되는지"**를 설명합니다.
 
 ### 대상 청중
 
-- ✅ Python 기초 지식 보유
-- ✅ ML 용어(gradient, loss, optimizer 등) 알고 있음
+- ✅ **Computer Vision 엔지니어** (CNN, Object Detection, Segmentation 등)
+- ✅ AI/ML 기초 지식 보유 (gradient, loss, optimizer 등)
+- ✅ PyTorch/TensorFlow 사용 경험
 - ✅ "왜 이렇게 했는지"가 궁금한 개발자
-- ❌ ML 완전 초보자 (용어 설명이 필요한 경우)
+- ❌ AI/ML 완전 초보자 (용어 설명이 필요한 경우)
+
+### 특화 분야
+
+| 분야 | 다루는 내용 |
+|------|-----------|
+| **Computer Vision** | CNN, ResNet, YOLO, Segmentation, Augmentation, Transfer Learning |
+| **Deep Learning** | 옵티마이저, 정규화, 학습률 스케줄링, Batch/Layer Norm |
+| **ML Pipeline** | 데이터 분할, 손실 함수, 평가 지표, 과적합 방지 |
+| **시계열** | LSTM/GRU, 슬라이딩 윈도우, 데이터 누수 방지 |
 
 ## 주요 기능
 
@@ -33,17 +44,30 @@ AI가 생성한 ML 코드를 **진짜 이해하고 싶은** 개발자를 위한 
 
 ### 답변 가능한 질문 예시
 
+**Computer Vision 관련:**
 ```
-Q: "max_depth=-1인데 왜 num_leaves로 제어해?"
-A: LightGBM은 leaf-wise 방식이라 깊이보다 리프 수가 복잡도와 직결됩니다.
-   num_leaves=31 = 2^5-1로, max_depth=5 수준의 복잡도를 리프 수로 표현한 것입니다.
+Q: "왜 ImageNet 정규화 값이 [0.485, 0.456, 0.406]이야?"
+A: ImageNet 120만장 이미지의 RGB 채널별 평균값입니다.
+   Pretrained 모델 사용 시 반드시 동일 값을 써야 합니다.
 
-Q: "colsample_bytree=0.8이 왜 트리 다양성 증가야?"
-A: 각 트리가 80%의 다른 피처 조합을 보면서 학습하면,
-   트리 간 상관관계가 낮아지고 앙상블 효과가 증가합니다.
+Q: "왜 3x3 커널을 쓰는 거야? 5x5가 더 좋지 않아?"
+A: VGGNet 논문에서 3x3 두 개 = 5x5 하나와 같은 receptive field지만,
+   파라미터 수가 더 적다는 걸 발견했습니다. (18 vs 25)
 
-Q: "num_leaves=31은 어디서 나온 숫자야?"
-A: 31 = 2^5 - 1. LightGBM이 max_depth=5 수준을 기본으로 상정한 값입니다.
+Q: "model.eval() 안 하면 왜 문제야?"
+A: Dropout이 추론 때도 작동해서 같은 입력에 다른 출력이 나옵니다.
+   프로덕션에서 예측 불안정 → 디버깅 지옥.
+```
+
+**Deep Learning 관련:**
+```
+Q: "learning_rate=1e-4는 어디서 나온 숫자야?"
+A: Adam 논문 권장값은 1e-3이지만, fine-tuning 시 pretrained 가중치를
+   건드리지 않으려면 더 작은 1e-4~1e-5를 씁니다.
+
+Q: "왜 BatchNorm인데 Transformer는 LayerNorm을 써?"
+A: BatchNorm은 배치 크기에 의존하는데, Transformer는 시퀀스 길이가
+   가변적이고 배치가 작을 수 있어서 LayerNorm이 더 적합합니다.
 ```
 
 ## 설치 방법
@@ -107,26 +131,35 @@ aiengineer-code-mentor/
 
 ## Reference 파일 설명
 
+### cv-concepts.md ⭐ (Computer Vision 특화)
+CV 엔지니어를 위한 핵심 개념:
+- **이미지 표현**: 픽셀값, 채널, 축 순서 (NCHW vs NHWC)
+- **데이터 증강**: RandomFlip, Rotation, ColorJitter 사용 시기
+- **CNN 구조**: Conv, Pooling, kernel_size, stride, padding
+- **전이 학습**: Feature extraction vs Fine-tuning 전략
+- **Object Detection**: IoU, NMS, Two-stage vs One-stage
+
 ### why-these-numbers.md
-ML 코드에서 자주 보이는 "마법의 숫자"들의 출처:
+AI 코드에서 자주 보이는 "마법의 숫자"들의 출처:
 - `42` - 시드 고정 (은하수를 여행하는 히치하이커)
 - `[0.485, 0.456, 0.406]` - ImageNet 정규화 평균값
-- `num_leaves=31` - 2^5-1, LightGBM 기본값
+- `3x3` - VGGNet에서 검증된 최적 커널 크기
 - `learning_rate=1e-4` - Adam 논문 권장값
+- `768` - BERT hidden size (12 heads × 64)
 
 ### algorithm-internals.md
 알고리즘이 내부적으로 어떻게 작동하는지:
-- Level-wise vs Leaf-wise 트리 성장
 - `model.eval()` vs `torch.no_grad()` 차이
 - Adam 옵티마이저 내부 동작
 - BatchNorm vs LayerNorm
+- Level-wise vs Leaf-wise 트리 성장
 
 ### parameter-interactions.md
 함께 조정해야 하는 파라미터 쌍:
+- `batch_size` ↔ `learning_rate` (Linear Scaling Rule)
+- `dropout` ↔ `weight_decay` (정규화 중복 주의)
+- `num_workers` ↔ `pin_memory` (DataLoader 최적화)
 - `learning_rate` ↔ `n_estimators`
-- `num_leaves` ↔ `max_depth`
-- `batch_size` ↔ `learning_rate`
-- `dropout` ↔ `weight_decay`
 
 ## 기여 방법
 
